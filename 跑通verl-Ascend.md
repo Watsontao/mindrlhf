@@ -126,3 +126,10 @@ gcc version 7.3.0 (GCC)
 (PyTorch-2.6.0) [ma-user vllm]$
 ```
 
+### 附录2 遇到的bug
+
+```shell
+# 如果遇到读取数据有问题，则升级 datasets, pyarrow 和相关依赖
+pip install --upgrade datasets pyarrow fsspec pandas
+```
+
