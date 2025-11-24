@@ -130,6 +130,12 @@ gcc version 7.3.0 (GCC)
 
 ```shell
 # 如果遇到读取数据有问题，则升级 datasets, pyarrow 和相关依赖
+# 按照上面操作的版本
+# datasets:3.0.1
+# pyarrow:21.0.0
 pip install --upgrade datasets pyarrow fsspec pandas
+# 升级后的版本
+#　datasets:4.4.1
+#　pyarrow:22.0.0
 ```
 
