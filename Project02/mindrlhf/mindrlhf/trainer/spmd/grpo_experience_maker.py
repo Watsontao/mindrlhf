@@ -524,7 +524,6 @@ class GRPOExperienceMaker:
 
     def generate_sequence(self, micro_bs, micro_num, prompt_tensors_full):
         """generate_sequence"""
-
         def _run_infer(input_batch, max_tokens):
             """Helper to execute one generation pass."""
             input_ids_numpy = self._split_for_data_parallel(input_batch, self.infer_dp)
@@ -550,155 +549,42 @@ class GRPOExperienceMaker:
 
         max_tokens_default = self.grpo_config.generate_config.sampling_config.max_tokens
         segment_enabled = self.segment_rollout_manager.enabled
-        self.infer.load()
-        try:
-            if not segment_enabled:
+
+        if not segment_enabled:
+            self.infer.load()
+            try:
                 generate_results = _run_infer(prompt_tensors_full, max_tokens_default)
                 self.segment_rollout_manager.set_metrics()
                 self.segment_rollout_metrics = {}
                 return generate_results
+            finally:
+                self.infer.offload()
+                logger.info("model_infer offload")
 
-            pad_token_id = self.segment_rollout_manager.pad_token_id
-            seq_length = self.segment_rollout_manager.seq_length
-            prompt_window = self.segment_rollout_manager.prompt_window
-            max_response_tokens = max_tokens_default
-            global_max_len = max(self.segment_rollout_manager.global_max_decode_len, max_response_tokens)
-            if global_max_len <= 0:
-                fallback = max_response_tokens if max_response_tokens > 0 else 1
-                global_max_len = max(1, fallback)
-            eos_token_ids = self.segment_rollout_manager.eos_token_ids
-            num_samples = prompt_tensors_full.shape[0]
+        num_generations = self.grpo_config.rl_config.num_generations
+        num_rollouts = self.grpo_config.rl_config.num_rollouts
+        sample_size = prompt_tensors_full.shape[0]
+        if num_generations * num_rollouts == 0:
+            raise ValueError("num_generations and num_rollouts must be positive when using segment rollout.")
+        n_questions = sample_size // (num_generations * num_rollouts)
+        if n_questions == 0:
+            raise ValueError("Invalid n_questions computed for segment rollout.")
+        micro_bs = max(1, n_questions // self.infer_dp)
+        micro_num = num_rollouts * num_generations
 
-            trimmed_prompts = self._remove_right_padding(prompt_tensors_full, padding_token=pad_token_id)
-            trimmed_prompts = [np.array(prompt, dtype=np.int32) for prompt in trimmed_prompts]
+        def _segment_infer(batch_inputs, segment_len):
+            return _run_infer(batch_inputs, min(segment_len, self.segment_rollout_manager.global_max_decode_len))
 
-            generated_tokens = [[] for _ in range(num_samples)]
-            finished = np.zeros(num_samples, dtype=bool)
-            truncated = np.zeros(num_samples, dtype=bool)
-            total_generated = np.zeros(num_samples, dtype=np.int64)
-            segments_used = 0
-            stalled_iterations = 0
-
-            def _build_input_batch():
-                batch = np.full_like(prompt_tensors_full, pad_token_id)
-                for idx in range(num_samples):
-                    prompt_tokens = trimmed_prompts[idx]
-                    if generated_tokens[idx]:
-                        generated_concat = np.concatenate(generated_tokens[idx])
-                        combined = np.concatenate((prompt_tokens, generated_concat))
-                    else:
-                        combined = prompt_tokens
-                    if combined.size > seq_length:
-                        combined = combined[-seq_length:]
-                    batch[idx, : combined.size] = combined
-                return batch
-
-            for segment_idx in range(self.segment_rollout_manager.max_segment_count):
-                if np.all(finished):
-                    break
-                segment_len = self.segment_rollout_manager.current_segment_len(segment_idx)
-                if segment_len <= 0:
-                    segment_len = 1
-                current_input_batch = _build_input_batch()
-                logger.info(f"segment rollout iteration {segment_idx}, segment length {segment_len}")
-                segment_results = _run_infer(current_input_batch, min(segment_len, global_max_len))
-                segments_used += 1
-                produced_any = False
-
-                right_padding_responses, responses_mask, _, _ = segment_results
-                for sample_idx in range(num_samples):
-                    if finished[sample_idx]:
-                        continue
-                    mask = responses_mask[sample_idx]
-                    segment_response = right_padding_responses[sample_idx]
-                    segment_tokens = segment_response[mask == 1]
-                    if segment_tokens.size == 0:
-                        continue
-                    max_allowed = max(0, global_max_len - total_generated[sample_idx])
-                    if max_allowed <= 0:
-                        finished[sample_idx] = True
-                        truncated[sample_idx] = True
-                        continue
-                    usable_tokens = segment_tokens[: min(segment_len, max_allowed)]
-                    if usable_tokens.size == 0:
-                        continue
-                    produced_any = True
-                    eos_hit = False
-                    cleaned = []
-                    for token in usable_tokens:
-                        token_int = int(token)
-                        if token_int in eos_token_ids:
-                            eos_hit = True
-                            break
-                        cleaned.append(token_int)
-                    if cleaned:
-                        generated_tokens[sample_idx].append(np.array(cleaned, dtype=np.int32))
-                        total_generated[sample_idx] += len(cleaned)
-                    if eos_hit:
-                        finished[sample_idx] = True
-                    elif total_generated[sample_idx] >= global_max_len:
-                        finished[sample_idx] = True
-                        truncated[sample_idx] = True
-
-                if not produced_any:
-                    stalled_iterations += 1
-                    if stalled_iterations >= 2:
-                        logger.warning("Segment rollout produced no tokens for two iterations, breaking early.")
-                        break
-                else:
-                    stalled_iterations = 0
-
-            for sample_idx in range(num_samples):
-                if not finished[sample_idx]:
-                    truncated[sample_idx] = True
-                    finished[sample_idx] = True
-
-            prompt_window = max(prompt_window, 0)
-            right_padding_responses = np.full(
-                (num_samples, max_response_tokens), pad_token_id, dtype=np.int32
+        self.infer.load()
+        try:
+            generate_results = self.segment_rollout_manager.decode(
+                prompt_tensors_full, _segment_infer, self.grpo_config.rl_config.seq_length
             )
-            responses_mask = np.zeros((num_samples, max_response_tokens), dtype=np.int32)
-            completion_lengths = []
-            for sample_idx in range(num_samples):
-                if generated_tokens[sample_idx]:
-                    concatenated = np.concatenate(generated_tokens[sample_idx])
-                else:
-                    concatenated = np.array([], dtype=np.int32)
-                concatenated = concatenated[:max_response_tokens]
-                seq_len = concatenated.size
-                if seq_len > 0:
-                    right_padding_responses[sample_idx, :seq_len] = concatenated
-                    responses_mask[sample_idx, :seq_len] = 1
-                completion_lengths.append(seq_len)
-
-            if prompt_window > 0:
-                left_padding_prompts = np.full((num_samples, prompt_window), pad_token_id, dtype=np.int32)
-                prompts_mask = np.zeros((num_samples, prompt_window), dtype=np.int32)
-                for sample_idx in range(num_samples):
-                    prompt_tokens = trimmed_prompts[sample_idx]
-                    if prompt_tokens.size > prompt_window:
-                        prompt_tokens = prompt_tokens[-prompt_window:]
-                    if prompt_tokens.size == 0:
-                        continue
-                    start = prompt_window - prompt_tokens.size
-                    left_padding_prompts[sample_idx, start:] = prompt_tokens
-                    prompts_mask[sample_idx, start:] = 1
-            else:
-                left_padding_prompts = np.zeros((num_samples, 0), dtype=np.int32)
-                prompts_mask = np.zeros((num_samples, 0), dtype=np.int32)
-
-            truncated_ratio = float(np.count_nonzero(truncated)) / max(1, num_samples)
-            mean_completion_len = float(np.mean(completion_lengths)) if completion_lengths else 0.0
-            self.segment_rollout_manager.set_metrics(
-                segments_used=segments_used,
-                truncated_ratio=truncated_ratio,
-                mean_completion_len=mean_completion_len,
-            )
-            self.segment_rollout_metrics = self.segment_rollout_manager.get_metrics()
-            return right_padding_responses, responses_mask, left_padding_prompts, prompts_mask
         finally:
             self.infer.offload()
             logger.info("model_infer offload")
+        self.segment_rollout_metrics = self.segment_rollout_manager.get_metrics()
+        return generate_results
 
     def _append_segment_rollout_log(self):
         """Append per-step segment rollout metrics into a dedicated log file."""
