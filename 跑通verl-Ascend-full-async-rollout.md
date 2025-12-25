@@ -369,7 +369,7 @@ def _init_sync_group(self):
 
 重新运行之后报错：
 
-**（我在云上跑的，npu的ID并非从0开始，所以报下面错误，在本地跑应该不会出现下面报错。按说应该跑通不会在报错了）**
+**（我在云上跑的，npu的ID并非从0开始，所以报下面错误。如果是在docker运行的，大概率是由于容器隔离的原因报错，见后文的第二种情况及解决办法）**
 
 ```shell
 Traceback (most recent call last):
@@ -424,7 +424,7 @@ ray::WorkerDict.actor_init_checkpoint_engine() (pid=823053, ip=172.16.0.86, acto
 ValueError: The current process is not running on the npu device
 ```
 
-修改`/verl/recipe/fully_async_policy/checkpoint_engine.py`的~~`_get_physical_device_id`，~~`npu_generate_uuid`改为
+修改`/verl/recipe/fully_async_policy/checkpoint_engine.py`的`def npu_generate_uuid()`改为
 
 ```python
 def npu_generate_uuid() -> str:
@@ -449,7 +449,87 @@ def npu_generate_uuid() -> str:
         raise ValueError("The current process is not running on the npu device") from e
 ```
 
+另一种情况是，如果是在docker里面运行的，也会报上面这个错误，原因是Docker 容器内的 PID 命名空间隔离 (PID Namespace Isolation)：
+
+---
+
+**容器内 (Your Script)**： Docker 容器就像一个独立的“小世界”。当您在容器里启动 Python 训练脚本时，容器内核会分配一个 PID（例如 `50`）。对您的脚本来说，`os.getpid()` 拿到的就是 `50`。
+
+**宿主机/驱动层 (npu-smi)**： `npu-smi` 是直接与安装在**物理服务器（宿主机）**上的 NPU 驱动交互的。驱动看到的是真实的物理进程，而在宿主机看来，您的 Docker 容器只是一个普通进程，其内部的 Python 进程 PID 可能是 `3887526`。
+
+**冲突点**： 代码逻辑拿着容器里的 `50` 去匹配驱动里的 `3887526`，必然匹配失败。
+
+这种情况下解决方式是修改`/verl/recipe/fully_async_policy/checkpoint_engine.py`的`def npu_generate_uuid()`改为：
+
+```shell
+# 忽略下gemini的中二代码
+def npu_generate_uuid() -> str:
+    """Generate uuid for each npu device"""
+    str_pid = str(os.getpid())
+    npu_num = 4 # 手动改成4
+    
+    # 1. 尝试强制激活 (关键！让驱动能看到显存占用)
+    try:
+        import torch_npu
+        torch.ones(1).npu()
+    except:
+        pass 
+    
+    # === [调试信息] ===
+    print(f"\n[DEBUG_UUID] 开始查找: Container PID={str_pid}, Searching in {npu_num} NPUs...")
+
+    try:
+        for npu_id in range(npu_num):
+            cmd = ["npu-smi", "info", "-t", "proc-mem", "-i", str(npu_id)]
+            
+            # 执行命令
+            try:
+                result = subprocess.run(cmd, check=True, capture_output=True, text=True)  # noqa: S603
+                str_result = str(result.stdout)
+            except Exception as e:
+                print(f"[DEBUG_UUID] NPU {npu_id} 查询失败: {e}")
+                continue
+
+            # === [调试信息] ===
+            print(f"--- [DEBUG_UUID] Checking NPU ID: {npu_id} ---")
+            # 打印太长了容易刷屏，只打印关键部分
+            print(f"Is PID {str_pid} in output? -> {'YES' if str_pid in str_result else 'NO'}")
+            
+            # 如果在 Docker 里，这里的判断极大概率是 NO，因为 PID 不一致
+            if str_pid in str_result:
+                match_chip_count = re.search(r"Chip Count[^\d]*(\d+)", str_result)
+                if match_chip_count:
+                    chip_count = int(match_chip_count.group(1))
+                    search_after_pid = str_result[str_result.find(str_pid) + len(str_pid) :]
+                    match_chip_id = re.search(r"Chip ID[^\d]*(\d+)", search_after_pid)
+                    if match_chip_id:
+                        chip_id = int(match_chip_id.group(1))
+                        final_uuid = f"{get_ip()}-{npu_id * chip_count + chip_id}"
+                        print(f"[DEBUG_UUID] Found strict match! Returning UUID: {final_uuid}")
+                        return final_uuid
+        
+        # =======================================================
+        # ⚠️ 关键修改：Docker 环境下的生命线
+        # =======================================================
+        print(f"[DEBUG_UUID] 遍历结束，未找到匹配 PID (Docker环境下属正常现象)。")
+        print(f"[DEBUG_UUID] 启用兜底策略 (Fallback)，生成唯一 UUID。")
+        
+        # 不要报错！直接返回一个由 IP 和 PID 组成的唯一字符串
+        # 这足够区分不同的 Worker 了
+        return f"{get_ip()}-fallback-{str_pid}"
+
+    except Exception as e:
+        print(f"[DEBUG_UUID] 发生未知错误: {e}")
+        # 只要有一口气在，就返回兜底 UUID，绝不让训练崩在这个小函数上
+        return f"{get_ip()}-fallback-{str_pid}"
+```
+
+
+
+---
+
 接着往下运行，此时已经跑起来了，开始train的时候，报错：
+
 ```shell
 Traceback (most recent call last):
   File "/home/ma-user/work/verl/recipe/fully_async_policy/fully_async_main.py", line 296, in main
