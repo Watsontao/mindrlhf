@@ -735,7 +735,13 @@ Bash
 # to-do: ref和和critic是不是也要加上Flash Attention的设置？
 ```
 
-修改后的命令为：**test-megatron-v2**
+修改后的命令为：**test-megatron-v2**，加了Flash Attention设置
+
+```shell
++actor_rollout_ref.actor.megatron.override_transformer_config.use_flash_attn=True \
+```
+
+
 
 ```shell
 # 加上这个export 不然会提示找不到megatron
@@ -973,7 +979,5 @@ python -m recipe.fully_async_policy.fully_async_main \
     async_training.require_batches="${require_batches}" \
     async_training.partial_rollout="${partial_rollout}" \
     async_training.use_rollout_log_probs=True \
-
-
 ```
 
