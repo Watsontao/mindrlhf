@@ -14,16 +14,25 @@
 # vllm
 # git clone -b v0.11.0 --depth 1 https://github.com/vllm-project/vllm.git
 cd vllm
-
 VLLM_TARGET_DEVICE=empty pip install .
+# (test01) [ma-user vllm]$git describe --tag
+# v0.11.0
+# (test01) [ma-user vllm]$git rev-parse HEAD
+# b8b302cde434df8c9289a2b465406b47ebab1c2d
+
 
 cd ../
 
 # vllm-ascend
 # git clone -b v0.11.0rc1 --depth 1 https://github.com/vllm-project/vllm-ascend.git
 cd vllm-ascend
-
 pip install  -e .
+# (test01) [ma-user vllm-ascend]$git rev-parse HEAD
+# c5fe179cef7f91096c5090bdd3de846cab92b736
+# (test01) [ma-user vllm-ascend]$git describe --tag
+# v0.11.0rc1
+
+
 
 cd ../
 
@@ -32,16 +41,26 @@ cd ../
 cd verl
 pip install -r requirements-npu.txt
 pip install -e .
+# (test01) [ma-user verl]$git describe --tag
+# v0.5.0-716-gccd7d934
 
 
 # 配置mindspeed
 cd ../
 # git clone https://gitcode.com/Ascend/MindSpeed.git
 pip install -e MindSpeed
+# (test01) [ma-user MindSpeed]$git rev-parse HEAD
+# 0d469e058869f1e916506d202e517fc7bbd80a84
+
 
 # git clone https://github.com/NVIDIA/Megatron-LM.git
 cd Megatron-LM
 git checkout core_v0.12.1
+# (test01) [ma-user Megatron-LM]$git describe --tag
+# core_v0.12.1
+# (test01) [ma-user Megatron-LM]$git rev-parse HEAD
+# a845aa7e12b3a117e24c2352b9e3e60bad2e3a17
+# (test01) [ma-user Megatron-LM]$ 
 
 
 # python -c "from vllm import LLM; print('恭喜！vLLM 导入成功！')"
@@ -55,6 +74,67 @@ git checkout core_v0.12.1
 # ray_dir=$(python -c 'import ray; import os; print(os.path.dirname(ray.__file__))')
 # patch -p1 -d ${ray_dir} < ray_2_51_1_hccl.patch
 ```
+
+### 当前版本
+
+```shell
+(test01) [ma-user work]$pip show Mindspeed
+Name: mindspeed
+Version: 0.12.1
+Summary: MindSpeed for LLMs of Ascend
+Home-page: https://gitcode.com/Ascend/MindSpeed
+Author: Ascend
+Author-email: 
+License: See https://gitcode.com/Ascend/MindSpeed
+Location: /home/ma-user/.conda/envs/test01/lib/python3.10/site-packages
+Editable project location: /home/ma-user/work/MindSpeed
+Requires: attrs, decorator, einops, gpytorch, ninja, numpy, pandas, protobuf, psutil, pybind11, pytest, pytest-mock, pyyaml, regex, scikit-learn, scipy, sentencepiece, six, SQLAlchemy, transformers, wheel
+Required-by: 
+#============================================
+(test01) [ma-user work]$pip show vllm
+Name: vllm
+Version: 0.11.0+empty
+Summary: A high-throughput and memory-efficient inference and serving engine for LLMs
+Home-page: https://github.com/vllm-project/vllm
+Author: vLLM Team
+Author-email: 
+License-Expression: Apache-2.0
+Location: /home/ma-user/.conda/envs/test01/lib/python3.10/site-packages
+Requires: aiohttp, blake3, cachetools, cbor2, cloudpickle, compressed-tensors, depyf, diskcache, einops, fastapi, filelock, gguf, lark, llguidance, lm-format-enforcer, mistral_common, msgspec, ninja, numpy, openai, openai-harmony, opencv-python-headless, outlines_core, partial-json-parser, pillow, prometheus-fastapi-instrumentator, prometheus_client, protobuf, psutil, py-cpuinfo, pybase64, pydantic, python-json-logger, pyyaml, pyzmq, regex, requests, scipy, sentencepiece, setproctitle, tiktoken, tokenizers, tqdm, transformers, typing_extensions, watchfiles, xgrammar
+Required-by: 
+#============================================
+(test01) [ma-user work]$pip show vllm-ascend
+Name: vllm_ascend
+Version: 0.11.0rc1
+Summary: vLLM Ascend backend plugin
+Home-page: https://github.com/vllm-project/vllm-ascend
+Author: vLLM-Ascend team
+Author-email: 
+License: Apache 2.0
+Location: /home/ma-user/.conda/envs/test01/lib/python3.10/site-packages
+Editable project location: /home/ma-user/work/vllm-ascend
+Requires: cmake, decorator, einops, msgpack, numba, numpy, opencv-python-headless, packaging, pip, pybind11, pyyaml, quart, scipy, setuptools, setuptools-scm, torch, torch-npu, torchvision, wheel
+Required-by: 
+
+#============================================
+(test01) [ma-user work]$pip show verl
+Name: verl
+Version: 0.7.0.dev0
+Summary: verl: Volcano Engine Reinforcement Learning for LLM
+Home-page: https://github.com/volcengine/verl
+Author: Bytedance - Seed - MLSys
+Author-email: zhangchi.usc1992@bytedance.com, gmsheng@connect.hku.hk
+License: Apache-2.0
+Location: /home/ma-user/.conda/envs/test01/lib/python3.10/site-packages
+Editable project location: /home/ma-user/work/verl
+Requires: accelerate, codetiming, datasets, dill, hydra-core, numpy, packaging, pandas, peft, pyarrow, pybind11, pylatexenc, ray, tensorboard, tensordict, torchdata, transformers, wandb
+Required-by: 
+(test01) [ma-user work]$
+```
+
+
+
+
 
 
 
