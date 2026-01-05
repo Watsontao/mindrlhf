@@ -65,8 +65,8 @@ use_dynamic_bsz=True
 actor_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
 infer_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
 offload=False
-train_ppo_micro_batch_size_per_gpu=2
-infer_ppo_micro_batch_size_per_gpu=2
+train_ppo_micro_batch_size_per_gpu=32
+infer_ppo_micro_batch_size_per_gpu=32
 
 optimizer_offload_fraction=0
 
