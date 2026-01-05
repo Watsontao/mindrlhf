@@ -40,7 +40,6 @@ clip_ratio_c=3
 use_remove_padding=False
 filter_overlong_prompts=True
 lr_warmup_steps=-1
-enable_gradient_checkpointing=True
 val_before_train=True
 rollout_calculate_log_probs=True
 
@@ -65,7 +64,7 @@ val_top_p=0.7
 use_dynamic_bsz=True
 actor_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
 infer_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
-offload=True
+offload=False
 train_ppo_micro_batch_size_per_gpu=2
 infer_ppo_micro_batch_size_per_gpu=2
 
@@ -152,7 +151,6 @@ python -m recipe.fully_async_policy.fully_async_main \
     algorithm.use_kl_in_reward=${use_kl_in_reward} \
     algorithm.kl_ctrl.kl_coef=${kl_coef} \
     actor_rollout_ref.model.path="${MODEL_PATH}" \
-    actor_rollout_ref.model.enable_gradient_checkpointing=${enable_gradient_checkpointing} \
     actor_rollout_ref.actor.use_kl_loss=${use_kl_loss} \
     actor_rollout_ref.actor.kl_loss_coef=${kl_loss_coef} \
     actor_rollout_ref.actor.clip_ratio_low=${clip_ratio_low} \
