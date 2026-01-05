@@ -28,13 +28,23 @@ fi
 adv_estimator=grpo
 
 use_kl_in_reward=False
-kl_coef=0.0
+kl_coef=0.001
 use_kl_loss=True
 kl_loss_coef=0.001
 kl_loss_type=low_var_kl
 
 clip_ratio_low=0.2
-clip_ratio_high=0.28
+clip_ratio_high=0.2
+clip_ratio_c=3
+
+use_remove_padding=False
+filter_overlong_prompts=True
+lr_warmup_steps=-1
+enable_gradient_checkpointing=True
+val_before_train=True
+rollout_calculate_log_probs=True
+
+
 
 # Response length parameters
 max_prompt_length=$((1024 * 2))
@@ -55,9 +65,9 @@ val_top_p=0.7
 use_dynamic_bsz=True
 actor_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
 infer_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
-offload=false
-train_ppo_micro_batch_size_per_gpu=32
-infer_ppo_micro_batch_size_per_gpu=64
+offload=True
+train_ppo_micro_batch_size_per_gpu=2
+infer_ppo_micro_batch_size_per_gpu=2
 
 optimizer_offload_fraction=0
 
@@ -119,9 +129,9 @@ gen_prompt_bsz=1
 n_resp_per_prompt=8
 train_prompt_mini_bsz=64
 total_rollout_steps=$(((512*100)))
-test_freq=20
+test_freq=5
 staleness_threshold=0.2
-trigger_parameter_sync_step=4d
+trigger_parameter_sync_step=4
 require_batches=1
 partial_rollout=True
 
@@ -131,31 +141,33 @@ python -m recipe.fully_async_policy.fully_async_main \
     data.train_files="${TRAIN_FILE}" \
     data.val_files="${TEST_FILE}" \
     data.prompt_key=prompt \
-    data.truncation='left' \
+    data.truncation='error' \
     data.max_prompt_length=${max_prompt_length} \
     data.max_response_length=${max_response_length} \
     data.train_batch_size=${train_prompt_bsz} \
     data.return_raw_chat=${return_raw_chat} \
+    data.filter_overlong_prompts=${filter_overlong_prompts} \
     actor_rollout_ref.rollout.n=${n_resp_per_prompt} \
     algorithm.adv_estimator=${adv_estimator} \
     algorithm.use_kl_in_reward=${use_kl_in_reward} \
     algorithm.kl_ctrl.kl_coef=${kl_coef} \
     actor_rollout_ref.model.path="${MODEL_PATH}" \
+    actor_rollout_ref.model.enable_gradient_checkpointing=${enable_gradient_checkpointing} \
     actor_rollout_ref.actor.use_kl_loss=${use_kl_loss} \
     actor_rollout_ref.actor.kl_loss_coef=${kl_loss_coef} \
     actor_rollout_ref.actor.clip_ratio_low=${clip_ratio_low} \
     actor_rollout_ref.actor.clip_ratio_high=${clip_ratio_high} \
-    actor_rollout_ref.actor.clip_ratio_c=10.0 \
+    actor_rollout_ref.actor.clip_ratio_c=${clip_ratio_c} \
     +actor_rollout_ref.model.override_config.model_config.max_position_embeddings=$((max_prompt_length + max_response_length)) \
     actor_rollout_ref.model.use_fused_kernels=False \
     actor_rollout_ref.actor.use_dynamic_bsz=${use_dynamic_bsz} \
     actor_rollout_ref.actor.ppo_mini_batch_size=${train_prompt_mini_bsz} \
     actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=${train_ppo_micro_batch_size_per_gpu} \
     actor_rollout_ref.actor.ppo_max_token_len_per_gpu=${actor_ppo_max_token_len} \
-    actor_rollout_ref.actor.optim.lr=1e-6 \
-    actor_rollout_ref.actor.optim.lr_warmup_steps=10 \
+    actor_rollout_ref.actor.optim.lr=5e-7 \
+    actor_rollout_ref.actor.optim.lr_warmup_steps=${lr_warmup_steps} \
     actor_rollout_ref.actor.optim.lr_decay_style='constant' \
-    actor_rollout_ref.actor.optim.weight_decay=0.1 \
+    actor_rollout_ref.actor.optim.weight_decay=0.01 \
     actor_rollout_ref.actor.optim.lr_decay_steps=${total_rollout_steps} \
     +actor_rollout_ref.actor.optim.override_optimizer_config.optimizer_offload_fraction=${optimizer_offload_fraction} \
     +actor_rollout_ref.actor.optim.override_optimizer_config.overlap_cpu_optimizer_d2h_h2d=True \
@@ -180,13 +192,13 @@ python -m recipe.fully_async_policy.fully_async_main \
     +actor_rollout_ref.actor.megatron.override_transformer_config.deallocate_pipeline_outputs=True \
     +actor_rollout_ref.actor.megatron.override_transformer_config.persist_layer_norm=True \
     +actor_rollout_ref.actor.megatron.override_transformer_config.use_flash_attn=True \
-    actor_rollout_ref.actor.entropy_coeff=0 \
+    actor_rollout_ref.actor.entropy_coeff=0.001 \
     actor_rollout_ref.actor.loss_agg_mode=${loss_agg_mode} \
     actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=${infer_ppo_micro_batch_size_per_gpu} \
     actor_rollout_ref.rollout.log_prob_max_token_len_per_gpu=${infer_ppo_max_token_len} \
-    actor_rollout_ref.rollout.gpu_memory_utilization=0.8 \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.7 \
     actor_rollout_ref.rollout.tensor_model_parallel_size=${INFER_TP} \
-    actor_rollout_ref.rollout.enable_chunked_prefill=True \
+    actor_rollout_ref.rollout.enable_chunked_prefill=False \
     actor_rollout_ref.rollout.max_num_batched_tokens=$((max_prompt_length + max_response_length)) \
     actor_rollout_ref.rollout.temperature=${temperature} \
     actor_rollout_ref.rollout.top_p=${top_p} \
@@ -198,7 +210,7 @@ python -m recipe.fully_async_policy.fully_async_main \
     actor_rollout_ref.rollout.val_kwargs.n=1 \
     actor_rollout_ref.rollout.name=${rollout_name} \
     actor_rollout_ref.rollout.mode=${rollout_mode} \
-    actor_rollout_ref.rollout.calculate_log_probs=True \
+    actor_rollout_ref.rollout.calculate_log_probs=${rollout_calculate_log_probs} \
     actor_rollout_ref.hybrid_engine=False \
     actor_rollout_ref.rollout.enforce_eager=True \
     actor_rollout_ref.rollout.free_cache_engine=True \
@@ -212,6 +224,7 @@ python -m recipe.fully_async_policy.fully_async_main \
     actor_rollout_ref.ref.megatron.context_parallel_size=${REF_CP} \
     actor_rollout_ref.ref.megatron.expert_model_parallel_size=${REF_EP} \
     actor_rollout_ref.ref.megatron.expert_tensor_parallel_size=${REF_ETP} \
+    actor_rollout_ref.model.use_remove_padding=${use_remove_padding} \
     reward_model.reward_manager=dapo \
     +reward_model.reward_kwargs.overlong_buffer_cfg.enable=${enable_overlong_buffer} \
     +reward_model.reward_kwargs.overlong_buffer_cfg.len=${overlong_buffer_len} \
@@ -221,7 +234,7 @@ python -m recipe.fully_async_policy.fully_async_main \
     trainer.logger=['console','tensorboard'] \
     trainer.project_name="${project_name}" \
     trainer.experiment_name="${exp_name}" \
-    trainer.val_before_train=False \
+    trainer.val_before_train=${val_before_train} \
     trainer.save_freq=-1 \
     trainer.total_epochs=1 \
     trainer.resume_mode=auto \
