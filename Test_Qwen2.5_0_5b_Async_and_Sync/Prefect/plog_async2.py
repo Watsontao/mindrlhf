@@ -134,5 +134,5 @@ def plot_training_analysis(log_file_path):
 
 # --- 执行 ---
 # 请确保文件名与您实际的日志文件一致
-log_file = "sync_training_log_20260105_171127.txt"
+log_file = "async_train_log_20260106_114550.txt"
 plot_training_analysis(log_file)
