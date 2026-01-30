@@ -1,0 +1,257 @@
+# 加上这个export 不然会提示找不到megatron
+export PYTHONPATH=$PYTHONPATH:/home/ma-user/work/Megatron-LM
+#!/usr/bin/env bash
+set -xuo pipefail
+
+project_name='GRPO-Qwen2.5-0.5b-Base-MATH'
+exp_name='GRPO-Qwen2.5-0.5b-Base-MATH-2gpu-async'
+
+
+# 定义日志文件名，建议带上时间戳防止覆盖
+LOG_FILE="/home/ma-user/work/log/async_train_log_$(date +%Y%m%d_%H%M%S).txt"
+echo "Training logs will be saved to: ${LOG_FILE}"
+
+
+RAY_DATA_HOME=${RAY_DATA_HOME:-"${HOME}/verl"}
+MODEL_PATH="/home/ma-user/work/models/Qwen2.5-0.5B-Instruct"
+CKPTS_DIR=${CKPTS_DIR:-"${RAY_DATA_HOME}/ckpts/${project_name}/${exp_name}"}
+TRAIN_FILE="/home/ma-user/work/data/gsm8k/train.parquet"
+TEST_FILE="/home/ma-user/work/data/gsm8k/test.parquet"
+
+rollout_mode="async"
+rollout_name="vllm" # sglang or vllm
+if [ "$rollout_mode" = "async" ]; then
+    export VLLM_USE_V1=1
+    return_raw_chat="True"
+fi
+# Algorithm parameters
+adv_estimator=grpo
+
+use_kl_in_reward=False
+kl_coef=0.001
+use_kl_loss=True
+kl_loss_coef=0.001
+kl_loss_type=low_var_kl
+
+clip_ratio_low=0.2
+clip_ratio_high=0.2
+clip_ratio_c=3
+
+use_remove_padding=False
+filter_overlong_prompts=False
+lr_warmup_steps=-1
+enable_gradient_checkpointing=True
+val_before_train=False
+rollout_calculate_log_probs=True
+
+
+
+# Response length parameters
+max_prompt_length=$((1024 * 2))
+max_response_length=$((1024 * 4))
+enable_overlong_buffer=True
+overlong_buffer_len=$((1024 / 2))
+overlong_penalty_factor=1.0
+
+loss_agg_mode="token-mean"
+
+# Algorithm
+temperature=0.7
+top_p=1.0
+top_k=-1 # 0 for HF rollout, -1 for vLLM rollout
+val_top_p=0.7
+
+# Performance Related Parameter
+use_dynamic_bsz=True
+actor_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
+infer_ppo_max_token_len=$(((max_prompt_length + max_response_length)))
+offload=True
+train_ppo_micro_batch_size_per_gpu=32
+infer_ppo_micro_batch_size_per_gpu=32
+
+optimizer_offload_fraction=0
+
+COMMON_PP=1
+COMMON_VPP=null
+COMMON_CP=1
+COMMON_TP=1
+COMMON_EP=1
+COMMON_ETP=1
+
+TRAIN_TP=1
+INFER_TP=1
+
+# === 强制使用脚本内定义的配置，忽略外部环境变量干扰 ===
+ACTOR_PP=$COMMON_PP
+ACTOR_VPP=$COMMON_VPP
+ACTOR_CP=$COMMON_CP
+ACTOR_TP=$TRAIN_TP
+ACTOR_EP=$COMMON_EP
+ACTOR_ETP=$COMMON_ETP
+
+ROLLOUT_TP=$INFER_TP
+
+REF_PP=$COMMON_PP
+REF_VPP=$COMMON_VPP
+REF_CP=$COMMON_CP
+REF_TP=$TRAIN_TP
+REF_EP=$COMMON_EP
+REF_ETP=$COMMON_ETP
+
+CRITIC_PP=$COMMON_PP
+CRITIC_VPP=$COMMON_VPP
+CRITIC_CP=$COMMON_CP
+CRITIC_TP=$TRAIN_TP
+CRITIC_EP=$COMMON_EP
+CRITIC_ETP=$COMMON_ETP
+
+RM_PP=$COMMON_PP
+RM_VPP=$COMMON_VPP
+RM_CP=$COMMON_CP
+RM_TP=$TRAIN_TP
+RM_EP=$COMMON_EP
+RM_ETP=$COMMON_ETP
+# ====================================================
+
+# install mbridge
+# pip3 install git+https://github.com/ISEEKYAN/mbridge
+USE_MBRIDGE=False
+USE_DIST_CKPT=False
+
+# Fully async specific parameters
+NNODES_ROLLOUT=1
+NNODES_TRAIN=1
+NGPUS_PER_NODE_ROLLOUT=2
+NGPUS_PER_NODE_TRAIN=2
+
+
+train_prompt_bsz=0
+# 每个gpu推理的rollout数量代码里面写死了 16
+gen_prompt_bsz=1
+n_resp_per_prompt=8
+train_prompt_mini_bsz=64
+total_rollout_steps=$(((512*1000)))  # 可以写为 数据集数量*轮数   或者 按步数 ppo_mini_batch * 多少个step  但最终跑多少还是取决于total_epoch的大小
+test_freq=5
+staleness_threshold=0.2
+trigger_parameter_sync_step=4
+require_batches=1
+partial_rollout=True
+
+python -m recipe.fully_async_policy.fully_async_main \
+    --config-path=config \
+    --config-name='fully_async_ppo_megatron_trainer.yaml'\
+    data.train_files="${TRAIN_FILE}" \
+    data.val_files="${TEST_FILE}" \
+    data.prompt_key=prompt \
+    data.truncation='error' \
+    data.max_prompt_length=${max_prompt_length} \
+    data.max_response_length=${max_response_length} \
+    data.train_batch_size=${train_prompt_bsz} \
+    data.return_raw_chat=${return_raw_chat} \
+    data.filter_overlong_prompts=${filter_overlong_prompts} \
+    actor_rollout_ref.rollout.n=${n_resp_per_prompt} \
+    algorithm.adv_estimator=${adv_estimator} \
+    algorithm.use_kl_in_reward=${use_kl_in_reward} \
+    algorithm.kl_ctrl.kl_coef=${kl_coef} \
+    actor_rollout_ref.model.path="${MODEL_PATH}" \
+    actor_rollout_ref.model.enable_gradient_checkpointing=${enable_gradient_checkpointing} \
+    actor_rollout_ref.actor.use_kl_loss=${use_kl_loss} \
+    actor_rollout_ref.actor.kl_loss_coef=${kl_loss_coef} \
+    actor_rollout_ref.actor.clip_ratio_low=${clip_ratio_low} \
+    actor_rollout_ref.actor.clip_ratio_high=${clip_ratio_high} \
+    actor_rollout_ref.actor.clip_ratio_c=${clip_ratio_c} \
+    +actor_rollout_ref.model.override_config.model_config.max_position_embeddings=$((max_prompt_length + max_response_length)) \
+    actor_rollout_ref.model.use_fused_kernels=False \
+    actor_rollout_ref.actor.use_dynamic_bsz=${use_dynamic_bsz} \
+    actor_rollout_ref.actor.ppo_mini_batch_size=${train_prompt_mini_bsz} \
+    actor_rollout_ref.actor.ppo_micro_batch_size_per_gpu=${train_ppo_micro_batch_size_per_gpu} \
+    actor_rollout_ref.actor.ppo_max_token_len_per_gpu=${actor_ppo_max_token_len} \
+    actor_rollout_ref.actor.optim.lr=5e-7 \
+    actor_rollout_ref.actor.optim.lr_warmup_steps=${lr_warmup_steps} \
+    actor_rollout_ref.actor.optim.lr_decay_style='constant' \
+    actor_rollout_ref.actor.optim.weight_decay=0.01 \
+    actor_rollout_ref.actor.optim.lr_decay_steps=${total_rollout_steps} \
+    +actor_rollout_ref.actor.optim.override_optimizer_config.optimizer_offload_fraction=${optimizer_offload_fraction} \
+    +actor_rollout_ref.actor.optim.override_optimizer_config.overlap_cpu_optimizer_d2h_h2d=True \
+    +actor_rollout_ref.actor.optim.override_optimizer_config.use_precision_aware_optimizer=True \
+    +actor_rollout_ref.actor.optim.override_optimizer_config.optimizer_cpu_offload=True \
+    actor_rollout_ref.actor.megatron.use_mbridge=$USE_MBRIDGE \
+    actor_rollout_ref.actor.megatron.use_dist_checkpointing=$USE_DIST_CKPT \
+    actor_rollout_ref.actor.megatron.param_offload=${offload} \
+    actor_rollout_ref.actor.megatron.grad_offload=${offload} \
+    actor_rollout_ref.actor.megatron.optimizer_offload=${offload} \
+    actor_rollout_ref.actor.megatron.tensor_model_parallel_size=${ACTOR_TP} \
+    actor_rollout_ref.actor.megatron.pipeline_model_parallel_size=${ACTOR_PP} \
+    actor_rollout_ref.actor.megatron.virtual_pipeline_model_parallel_size=${ACTOR_VPP} \
+    actor_rollout_ref.actor.megatron.context_parallel_size=${ACTOR_CP} \
+    actor_rollout_ref.actor.megatron.expert_model_parallel_size=${ACTOR_EP} \
+    actor_rollout_ref.actor.megatron.expert_tensor_parallel_size=${ACTOR_ETP} \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.apply_rope_fusion=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.masked_softmax_fusion=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.bias_activation_fusion=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.bias_dropout_fusion=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.gradient_accumulation_fusion=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.deallocate_pipeline_outputs=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.persist_layer_norm=True \
+    +actor_rollout_ref.actor.megatron.override_transformer_config.use_flash_attn=True \
+    actor_rollout_ref.actor.entropy_coeff=0.001 \
+    actor_rollout_ref.actor.loss_agg_mode=${loss_agg_mode} \
+    actor_rollout_ref.rollout.log_prob_micro_batch_size_per_gpu=${infer_ppo_micro_batch_size_per_gpu} \
+    actor_rollout_ref.rollout.log_prob_max_token_len_per_gpu=${infer_ppo_max_token_len} \
+    actor_rollout_ref.rollout.gpu_memory_utilization=0.7 \
+    actor_rollout_ref.rollout.tensor_model_parallel_size=${INFER_TP} \
+    actor_rollout_ref.rollout.enable_chunked_prefill=False \
+    actor_rollout_ref.rollout.max_num_batched_tokens=$((max_prompt_length + max_response_length)) \
+    actor_rollout_ref.rollout.temperature=${temperature} \
+    actor_rollout_ref.rollout.top_p=${top_p} \
+    actor_rollout_ref.rollout.top_k=${top_k} \
+    actor_rollout_ref.rollout.val_kwargs.temperature=${temperature} \
+    actor_rollout_ref.rollout.val_kwargs.top_p=${val_top_p} \
+    actor_rollout_ref.rollout.val_kwargs.top_k=${top_k} \
+    actor_rollout_ref.rollout.val_kwargs.do_sample=True \
+    actor_rollout_ref.rollout.val_kwargs.n=1 \
+    actor_rollout_ref.rollout.name=${rollout_name} \
+    actor_rollout_ref.rollout.mode=${rollout_mode} \
+    actor_rollout_ref.rollout.calculate_log_probs=${rollout_calculate_log_probs} \
+    actor_rollout_ref.hybrid_engine=False \
+    actor_rollout_ref.rollout.enforce_eager=True \
+    actor_rollout_ref.rollout.free_cache_engine=True \
+    actor_rollout_ref.ref.log_prob_micro_batch_size_per_gpu=${infer_ppo_micro_batch_size_per_gpu} \
+    actor_rollout_ref.ref.log_prob_max_token_len_per_gpu=${infer_ppo_max_token_len} \
+    actor_rollout_ref.ref.megatron.use_dist_checkpointing=${USE_DIST_CKPT} \
+    actor_rollout_ref.ref.megatron.param_offload=${offload} \
+    actor_rollout_ref.ref.megatron.tensor_model_parallel_size=${REF_TP} \
+    actor_rollout_ref.ref.megatron.pipeline_model_parallel_size=${REF_PP} \
+    actor_rollout_ref.ref.megatron.virtual_pipeline_model_parallel_size=${REF_VPP} \
+    actor_rollout_ref.ref.megatron.context_parallel_size=${REF_CP} \
+    actor_rollout_ref.ref.megatron.expert_model_parallel_size=${REF_EP} \
+    actor_rollout_ref.ref.megatron.expert_tensor_parallel_size=${REF_ETP} \
+    actor_rollout_ref.model.use_remove_padding=${use_remove_padding} \
+    reward_model.reward_manager=dapo \
+    +reward_model.reward_kwargs.overlong_buffer_cfg.enable=${enable_overlong_buffer} \
+    +reward_model.reward_kwargs.overlong_buffer_cfg.len=${overlong_buffer_len} \
+    +reward_model.reward_kwargs.overlong_buffer_cfg.penalty_factor=${overlong_penalty_factor} \
+    +reward_model.reward_kwargs.overlong_buffer_cfg.log=False \
+    +reward_model.reward_kwargs.max_resp_len=${max_response_length} \
+    trainer.logger=['console','tensorboard'] \
+    trainer.project_name="${project_name}" \
+    trainer.experiment_name="${exp_name}" \
+    trainer.val_before_train=${val_before_train} \
+    trainer.save_freq=-1 \
+    trainer.total_epochs=1 \
+    trainer.resume_mode=auto \
+    trainer.log_val_generations=10 \
+    trainer.nnodes="${NNODES_TRAIN}" \
+    trainer.n_gpus_per_node="${NGPUS_PER_NODE_TRAIN}" \
+    trainer.device=npu \
+    rollout.nnodes="${NNODES_ROLLOUT}" \
+    rollout.n_gpus_per_node="${NGPUS_PER_NODE_ROLLOUT}" \
+    rollout.total_rollout_steps="${total_rollout_steps}" \
+    rollout.total_epochs=1 \
+    rollout.test_freq="${test_freq}" \
+    async_training.staleness_threshold="${staleness_threshold}" \
+    async_training.trigger_parameter_sync_step="${trigger_parameter_sync_step}" \
+    async_training.require_batches="${require_batches}" \
+    async_training.partial_rollout="${partial_rollout}" \
+    async_training.use_rollout_log_probs=True $@ 2>&1
+    # async_training.use_rollout_log_probs=True $@ 2>&1 | tee ${LOG_FILE}
