@@ -1348,7 +1348,7 @@ class RayPPOTrainer:
                         else:
                             gen_batch_output = self.async_rollout_manager.generate_sequences(gen_batch_output)
 
-                        # --- Added: Log statistics and responses for synchronous mode ---
+                        # --- Added: Log all information into a single JSONL file ---
                         try:
                             import json
                             import time
@@ -1356,15 +1356,11 @@ class RayPPOTrainer:
                             
                             # Helper to extract model name/size
                             model_path = self.config.actor_rollout_ref.model.path
-                            # Try to find patterns like '7b', '0.5b', '1.5b' etc. or use the last part of path
                             model_name_match = re.search(r'(\d+(?:\.\d+)?b)', model_path.lower())
-                            if model_name_match:
-                                model_suffix = model_name_match.group(1)
-                            else:
-                                model_suffix = model_path.strip('/').split('/')[-1]
+                            model_suffix = model_name_match.group(1) if model_name_match else model_path.strip('/').split('/')[-1]
                             
-                            stats_filename = f"rollout_length_stats_sync_{model_suffix}.jsonl"
-                            responses_filename = f"rollout_responses_sync_{model_suffix}.jsonl"
+                            # Combined filename
+                            combined_filename = f"rollout_data_sync_{model_suffix}.jsonl"
 
                             n_rollouts = self.config.actor_rollout_ref.rollout.n
                             batch_size = gen_batch_output.batch.batch_size[0]
@@ -1373,12 +1369,7 @@ class RayPPOTrainer:
                             response_mask = gen_batch_output.batch['response_mask'].cpu()
                             all_lengths = response_mask.sum(dim=-1).tolist()
                             
-                            # Extract Batch Level Timing
-                            # gen_batch_output.meta_info["timing"] contains metrics from worker
-                            # We'll use 'agent_loop/slowest/generate_sequences' or similar if available, 
-                            # otherwise try to find any 'gen' related time.
                             batch_timing = gen_batch_output.meta_info.get("timing", {})
-                            # Try specific keys often present in verl
                             batch_time = batch_timing.get("agent_loop/slowest/generate_sequences", 
                                             batch_timing.get("gen", 0.0))
                             
@@ -1405,28 +1396,23 @@ class RayPPOTrainer:
                                         print(f"[Sync P-DSR Analysis] Step: {self.global_steps} Sample: {i} | Probe LONG. "
                                               f"Cond Prob: {avg_prob:.2f}% (Count: {self.total_long_probes})")
 
-                                # Log Stats
-                                log_entry = {
-                                    "timestamp": time.time(),
-                                    "step": self.global_steps,
-                                    "sample_id": sample_id,
-                                    "lengths": sample_lengths,
-                                    "batch_time": round(batch_time, 2)
-                                }
-                                with open(stats_filename, "a", encoding="utf-8") as f:
-                                    f.write(json.dumps(log_entry) + "\n")
-                                
-                                # Log Text
-                                text_log_entry = {
-                                    "step": self.global_steps,
-                                    "sample_id": sample_id,
-                                    "responses": sample_responses
-                                }
-                                with open(responses_filename, "a", encoding="utf-8") as f_text:
-                                    f_text.write(json.dumps(text_log_entry, ensure_ascii=False) + "\n")
+                                # Log Flattened Entries (One per Response)
+                                for r_idx in range(len(sample_lengths)):
+                                    flattened_entry = {
+                                        "timestamp": time.time(),
+                                        "step": self.global_steps,
+                                        "sample_id": sample_id,
+                                        "response_idx": r_idx,
+                                        "length": sample_lengths[r_idx],
+                                        "batch_time": round(batch_time, 2),
+                                        "response_text": sample_responses[r_idx]
+                                    }
+                                    with open(combined_filename, "a", encoding="utf-8") as f:
+                                        f.write(json.dumps(flattened_entry, ensure_ascii=False) + "\n")
                                     
                         except Exception as e:
                             print(f"[Sync Stats] Error logging stats: {e}")
+                        # -----------------------------------------------------------
                         # ----------------------------------------------------------------
 
                         timing_raw.update(gen_batch_output.meta_info["timing"])
