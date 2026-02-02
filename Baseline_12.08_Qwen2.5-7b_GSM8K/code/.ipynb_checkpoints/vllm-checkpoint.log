@@ -1,0 +1,396 @@
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+Start worker process with rank id:0, log file:./prof_vllm_log/worker_0.log. Environment variable [RANK_ID=0] is exported.
+Start worker process with rank id:1, log file:./prof_vllm_log/worker_1.log. Environment variable [RANK_ID=1] is exported.
+Start worker process with rank id:2, log file:./prof_vllm_log/worker_2.log. Environment variable [RANK_ID=2] is exported.
+Start worker process with rank id:3, log file:./prof_vllm_log/worker_3.log. Environment variable [RANK_ID=3] is exported.
+Start worker process with rank id:4, log file:./prof_vllm_log/worker_4.log. Environment variable [RANK_ID=4] is exported.
+Start worker process with rank id:5, log file:./prof_vllm_log/worker_5.log. Environment variable [RANK_ID=5] is exported.
+Start worker process with rank id:6, log file:./prof_vllm_log/worker_6.log. Environment variable [RANK_ID=6] is exported.
+Start worker process with rank id:7, log file:./prof_vllm_log/worker_7.log. Environment variable [RANK_ID=7] is exported.
+[WARNING] ME(3295133:281472871440400,MainProcess):2025-12-05-22:27:17.207.098 [mindspore/parallel/cluster/process_entity/_api.py:267] Distributed job is spawned. Waiting all processes to exit...
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float64'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:30,946 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:30,948 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,101 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,196 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,199 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,203 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,295 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+2025-12-05 22:27:31,298 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+ModuleNotFoundError: No module named 'research'
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+ModuleNotFoundError: No module named 'research'
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+Traceback (most recent call last):
+  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+    from .grpo_trainer import GRPOTrainer
+  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+    from mindrlhf.worker.infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+    from .infer_worker import InferWorker
+  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+    from research.deepseek3.deepseek3_config import DeepseekV3Config
+ModuleNotFoundError: No module named 'research'
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+[ERROR] ME(3295133:281472871440400,MainProcess):2025-12-05-22:27:33.688.263 [mindspore/parallel/cluster/process_entity/_api.py:363] Worker process 3295624 exit with exception. Error code: 1.
+[WARNING] ME(3295133:281472871440400,MainProcess):2025-12-05-22:27:33.688.647 [mindspore/parallel/cluster/process_entity/_api.py:369] There's worker exits with exception, kill all other workers.
+[ERROR] ME(3295133:281472871440400,MainProcess):2025-12-05-22:27:34.515.537 [mindspore/parallel/cluster/process_entity/_api.py:382] Scheduler process 3295614 exit with exception.
+[ERROR] ME(3295133:281472871440400,MainProcess):2025-12-05-22:27:34.516.479 [mindspore/parallel/cluster/process_entity/_api.py:603] Time out nodes are []
+./prof_vllm_log/worker_6.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_6.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_6.log-9-2025-12-05 22:27:31,203 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_6.log-10-2025-12-05 22:27:31,295 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_6.log-11-2025-12-05 22:27:31,298 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_6.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_6.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_6.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_6.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_6.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_6.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_6.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_6.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_6.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_6.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_6.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_6.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_6.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_1.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_1.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_1.log-9-2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_1.log-10-2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_1.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_1.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_1.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_1.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_1.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_1.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_1.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_1.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_1.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_1.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_1.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_1.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_1.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_1.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/scheduler.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/scheduler.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/scheduler.log-9-2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/scheduler.log-10-2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/scheduler.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/scheduler.log:12:Traceback (most recent call last):
+./prof_vllm_log/scheduler.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/scheduler.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/scheduler.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/scheduler.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/scheduler.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/scheduler.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/scheduler.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/scheduler.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/scheduler.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/scheduler.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/scheduler.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/scheduler.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_2.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_2.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_2.log-9-2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_2.log-10-2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_2.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_2.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_2.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_2.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_2.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_2.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_2.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_2.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_2.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_2.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_2.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_2.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_2.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_2.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_3.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_3.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_3.log-9-2025-12-05 22:27:30,946 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_3.log-10-2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_3.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_3.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_3.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_3.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_3.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_3.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_3.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_3.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_3.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_3.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_3.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_3.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_3.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_3.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_4.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_4.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_4.log-9-2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_4.log-10-2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_4.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_4.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_4.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_4.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_4.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_4.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_4.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_4.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_4.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_4.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_4.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_4.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_4.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_4.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_0.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_0.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_0.log-9-2025-12-05 22:27:30,926 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_0.log-10-2025-12-05 22:27:31,064 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_0.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_0.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_0.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_0.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_0.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_0.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_0.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_0.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_0.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_0.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_0.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_0.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_0.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_0.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_7.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_7.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_7.log-9-2025-12-05 22:27:31,101 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_7.log-10-2025-12-05 22:27:31,196 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_7.log-11-2025-12-05 22:27:31,199 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_7.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_7.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_7.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_7.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_7.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_7.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_7.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_7.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_7.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_7.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_7.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_7.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_7.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+--
+./prof_vllm_log/worker_5.log-7-/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for <class 'numpy.float32'> type is zero.
+./prof_vllm_log/worker_5.log-8-  return self._float_to_str(self.smallest_subnormal)
+./prof_vllm_log/worker_5.log-9-2025-12-05 22:27:30,948 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_5.log-10-2025-12-05 22:27:31,063 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_5.log-11-2025-12-05 22:27:31,067 - mindformers./output/log[mindformers/version_control.py:95] - INFO - The environment variables ENABLE_LAZY_INLINE and ENABLE_LAZY_INLINE_NO_PIPELINE will be deprecated in a future release. The lazy_inline feature will be directly controlled by the presence of the decorator.
+./prof_vllm_log/worker_5.log:12:Traceback (most recent call last):
+./prof_vllm_log/worker_5.log-13-  File "/home/ma-user/work/mindrlhf/examples/grpo/qwen_grpo_tutorial/main.py", line 20, in <module>
+./prof_vllm_log/worker_5.log-14-    from mindrlhf.trainer.spmd.grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_5.log-15-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/__init__.py", line 17, in <module>
+./prof_vllm_log/worker_5.log-16-    from .grpo_trainer import GRPOTrainer
+./prof_vllm_log/worker_5.log-17-  File "/home/ma-user/work/mindrlhf/mindrlhf/trainer/spmd/grpo_trainer.py", line 40, in <module>
+./prof_vllm_log/worker_5.log-18-    from mindrlhf.worker.infer_worker import InferWorker
+./prof_vllm_log/worker_5.log-19-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/__init__.py", line 19, in <module>
+./prof_vllm_log/worker_5.log-20-    from .infer_worker import InferWorker
+./prof_vllm_log/worker_5.log-21-  File "/home/ma-user/work/mindrlhf/mindrlhf/worker/infer_worker.py", line 33, in <module>
+./prof_vllm_log/worker_5.log-22-    from research.deepseek3.deepseek3_config import DeepseekV3Config
+./prof_vllm_log/worker_5.log:23:ModuleNotFoundError: No module named 'research'
+./prof_vllm_log/worker_5.log-24-[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True
+Traceback (most recent call last):
+  File "/home/ma-user/anaconda3/envs/MindSpore/bin/msrun", line 8, in <module>
+    sys.exit(main())
+  File "/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/mindspore/parallel/cluster/run.py", line 191, in main
+    run(args)
+  File "/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/mindspore/parallel/cluster/run.py", line 185, in run
+    process_manager.run()
+  File "/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/mindspore/parallel/cluster/process_entity/_api.py", line 268, in run
+    self.join_processes()
+  File "/home/ma-user/anaconda3/envs/MindSpore/lib/python3.10/site-packages/mindspore/parallel/cluster/process_entity/_api.py", line 387, in join_processes
+    raise RuntimeError("Distributed job exited with exception. Please check logs in "
+RuntimeError: Distributed job exited with exception. Please check logs in directory: ./prof_vllm_log.
+[MS_ALLOC_CONF]Runtime config:  memory_tracker:False  enable_vmm:True

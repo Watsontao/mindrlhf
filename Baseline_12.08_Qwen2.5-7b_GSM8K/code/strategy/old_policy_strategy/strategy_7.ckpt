@@ -1,0 +1,511 @@
+B
+0MatMul_model.model.layers.21.attention.wo.weight;
++Add_model.model.layers.19.attention.wq.biasB
+0MatMul_model.model.layers.22.attention.wq.weightB
+0MatMul_model.model.layers.18.attention.wq.weightB
+0MatMul_model.model.layers.25.attention.wv.weightB
+0MatMul_model.model.layers.16.attention.wo.weight;
++Add_model.model.layers.15.attention.wq.biasE
+3MatMul_model.model.layers.27.feed_forward.w1.weight?
+-RmsNorm_model.model.layers.15.ffn_norm.weight;
++Add_model.model.layers.26.attention.wv.biasB
+0MatMul_model.model.layers.14.attention.wq.weightE
+3MatMul_model.model.layers.14.feed_forward.w2.weightE
+3MatMul_model.model.layers.14.feed_forward.w3.weight;
++Add_model.model.layers.14.attention.wk.biasE
+3MatMul_model.model.layers.25.feed_forward.w2.weightB
+0MatMul_model.model.layers.21.attention.wv.weightE
+3MatMul_model.model.layers.26.feed_forward.w3.weight;
++Add_model.model.layers.20.attention.wq.biasE
+3MatMul_model.model.layers.18.feed_forward.w2.weightE
+3MatMul_model.model.layers.27.feed_forward.w3.weightE
+3MatMul_model.model.layers.18.feed_forward.w3.weight;
++Add_model.model.layers.18.attention.wk.biasB
+0MatMul_model.model.layers.19.attention.wk.weight;
++Add_model.model.layers.17.attention.wv.biasE
+3RmsNorm_model.model.layers.22.attention_norm.weight;
++Add_model.model.layers.22.attention.wv.biasB
+0MatMul_model.model.layers.16.attention.wk.weightB
+0MatMul_model.model.layers.18.attention.wo.weight?
+-RmsNorm_model.model.layers.26.ffn_norm.weightB
+0MatMul_model.model.layers.23.attention.wo.weight;
++Add_model.model.layers.16.attention.wq.biasE
+3RmsNorm_model.model.layers.26.attention_norm.weightB
+0MatMul_model.model.layers.14.attention.wv.weightE
+3MatMul_model.model.layers.24.feed_forward.w3.weightE
+3MatMul_model.model.layers.22.feed_forward.w2.weight;
++Add_model.model.layers.15.attention.wv.biasB
+0MatMul_model.model.layers.17.attention.wq.weightE
+3RmsNorm_model.model.layers.15.attention_norm.weightB
+0MatMul_model.model.layers.21.attention.wk.weightE
+3MatMul_model.model.layers.19.feed_forward.w1.weight?
+-RmsNorm_model.model.layers.25.ffn_norm.weightB
+0MatMul_model.model.layers.22.attention.wk.weight?
+-RmsNorm_model.model.layers.23.ffn_norm.weightE
+3RmsNorm_model.model.layers.20.attention_norm.weightE
+3MatMul_model.model.layers.27.feed_forward.w2.weight;
++Add_model.model.layers.14.attention.wq.biasB
+0MatMul_model.model.layers.20.attention.wv.weight;
++Add_model.model.layers.21.attention.wv.bias?
+-RmsNorm_model.model.layers.22.ffn_norm.weightB
+0MatMul_model.model.layers.27.attention.wq.weightE
+3MatMul_model.model.layers.23.feed_forward.w2.weight;
++Add_model.model.layers.25.attention.wq.biasE
+3MatMul_model.model.layers.21.feed_forward.w1.weightE
+3MatMul_model.model.layers.20.feed_forward.w2.weightB
+0MatMul_model.model.layers.23.attention.wq.weightE
+3MatMul_model.model.layers.15.feed_forward.w2.weight;
++Add_model.model.layers.16.attention.wk.biasB
+0MatMul_model.model.layers.24.attention.wv.weightB
+0MatMul_model.model.layers.21.attention.wq.weight?
+-RmsNorm_model.model.layers.20.ffn_norm.weight?
+-RmsNorm_model.model.layers.18.ffn_norm.weightE
+3MatMul_model.model.layers.17.feed_forward.w1.weightB
+0MatMul_model.model.layers.16.attention.wq.weightE
+3MatMul_model.model.layers.17.feed_forward.w3.weightE
+3MatMul_model.model.layers.19.feed_forward.w2.weight?
+-RmsNorm_model.model.layers.17.ffn_norm.weightE
+3RmsNorm_model.model.layers.14.attention_norm.weight?
+-RmsNorm_model.model.layers.21.ffn_norm.weightE
+3MatMul_model.model.layers.14.feed_forward.w1.weightE
+3RmsNorm_model.model.layers.17.attention_norm.weightB
+0MatMul_model.model.layers.27.attention.wo.weightB
+0MatMul_model.model.layers.23.attention.wv.weightE
+3MatMul_model.model.layers.20.feed_forward.w1.weight;
++Add_model.model.layers.22.attention.wk.biasB
+0MatMul_model.model.layers.26.attention.wv.weightB
+0MatMul_model.model.layers.17.attention.wv.weightB
+0MatMul_model.model.layers.17.attention.wk.weightE
+3RmsNorm_model.model.layers.19.attention_norm.weight;
++Add_model.model.layers.23.attention.wq.biasB
+0MatMul_model.model.layers.25.attention.wk.weight;
++Add_model.model.layers.19.attention.wk.bias;
++Add_model.model.layers.20.attention.wk.bias;
++Add_model.model.layers.18.attention.wv.bias;
++Add_model.model.layers.22.attention.wq.biasE
+3RmsNorm_model.model.layers.18.attention_norm.weightB
+0MatMul_model.model.layers.24.attention.wk.weightE
+3MatMul_model.model.layers.16.feed_forward.w3.weightE
+3MatMul_model.model.layers.23.feed_forward.w1.weight;
++Add_model.model.layers.26.attention.wk.biasE
+3MatMul_model.model.layers.23.feed_forward.w3.weightB
+0MatMul_model.model.layers.22.attention.wo.weightB
+0MatMul_model.model.layers.20.attention.wo.weightE
+3RmsNorm_model.model.layers.23.attention_norm.weightE
+3MatMul_model.model.layers.26.feed_forward.w1.weight5
+#RmsNorm_model.model.norm_out.weightE
+3MatMul_model.model.layers.25.feed_forward.w1.weightE
+3MatMul_model.model.layers.16.feed_forward.w2.weightB
+0MatMul_model.model.layers.24.attention.wq.weightE
+3MatMul_model.model.layers.24.feed_forward.w1.weightB
+0MatMul_model.model.layers.17.attention.wo.weight?
+-RmsNorm_model.model.layers.24.ffn_norm.weight;
++Add_model.model.layers.20.attention.wv.biasE
+3RmsNorm_model.model.layers.16.attention_norm.weightB
+0MatMul_model.model.layers.16.attention.wv.weightE
+3MatMul_model.model.layers.15.feed_forward.w3.weight;
++Add_model.model.layers.15.attention.wk.bias-
+MatMul_model.lm_head.weight;
++Add_model.model.layers.27.attention.wq.bias?
+-RmsNorm_model.model.layers.27.ffn_norm.weightB
+0MatMul_model.model.layers.19.attention.wq.weight;
++Add_model.model.layers.21.attention.wq.bias;
++Add_model.model.layers.17.attention.wq.biasB
+0MatMul_model.model.layers.19.attention.wv.weightB
+0MatMul_model.model.layers.27.attention.wv.weightE
+3MatMul_model.model.layers.24.feed_forward.w2.weightB
+0MatMul_model.model.layers.19.attention.wo.weightB
+0MatMul_model.model.layers.15.attention.wq.weight;
++Add_model.model.layers.23.attention.wk.biasB
+0MatMul_model.model.layers.20.attention.wk.weight;
++Add_model.model.layers.26.attention.wq.bias;
++Add_model.model.layers.27.attention.wv.biasB
+0MatMul_model.model.layers.26.attention.wo.weightB
+0MatMul_model.model.layers.20.attention.wq.weightB
+0MatMul_model.model.layers.25.attention.wo.weight;
++Add_model.model.layers.14.attention.wv.biasE
+3MatMul_model.model.layers.25.feed_forward.w3.weightE
+3RmsNorm_model.model.layers.27.attention_norm.weight?
+-RmsNorm_model.model.layers.19.ffn_norm.weightE
+3MatMul_model.model.layers.26.feed_forward.w2.weightE
+3MatMul_model.model.layers.19.feed_forward.w3.weightE
+3MatMul_model.model.layers.17.feed_forward.w2.weightB
+0MatMul_model.model.layers.14.attention.wo.weightE
+3RmsNorm_model.model.layers.25.attention_norm.weightB
+0MatMul_model.model.layers.27.attention.wk.weightB
+0MatMul_model.model.layers.26.attention.wk.weightE
+3RmsNorm_model.model.layers.21.attention_norm.weight;
++Add_model.model.layers.21.attention.wk.biasB
+0MatMul_model.model.layers.15.attention.wv.weightB
+0MatMul_model.model.layers.15.attention.wo.weightE
+3MatMul_model.model.layers.21.feed_forward.w3.weightB
+0MatMul_model.model.layers.25.attention.wq.weight;
++Add_model.model.layers.18.attention.wq.bias;
++Add_model.model.layers.23.attention.wv.biasE
+3MatMul_model.model.layers.22.feed_forward.w3.weightB
+0MatMul_model.model.layers.14.attention.wk.weight;
++Add_model.model.layers.27.attention.wk.biasE
+3MatMul_model.model.layers.16.feed_forward.w1.weightE
+3MatMul_model.model.layers.20.feed_forward.w3.weight;
++Add_model.model.layers.16.attention.wv.bias;
++Add_model.model.layers.24.attention.wq.biasB
+0MatMul_model.model.layers.18.attention.wv.weightB
+0MatMul_model.model.layers.26.attention.wq.weight;
++Add_model.model.layers.24.attention.wk.biasE
+3MatMul_model.model.layers.18.feed_forward.w1.weightE
+3MatMul_model.model.layers.21.feed_forward.w2.weight?
+-RmsNorm_model.model.layers.14.ffn_norm.weight?
+-RmsNorm_model.model.layers.16.ffn_norm.weightE
+3MatMul_model.model.layers.22.feed_forward.w1.weightE
+3RmsNorm_model.model.layers.24.attention_norm.weight;
++Add_model.model.layers.25.attention.wv.biasB
+0MatMul_model.model.layers.22.attention.wv.weightE
+3MatMul_model.model.layers.15.feed_forward.w1.weightB
+0MatMul_model.model.layers.18.attention.wk.weightB
+0MatMul_model.model.layers.24.attention.wo.weight;
++Add_model.model.layers.19.attention.wv.biasB
+0MatMul_model.model.layers.15.attention.wk.weight;
++Add_model.model.layers.24.attention.wv.bias;
++Add_model.model.layers.25.attention.wk.bias;
++Add_model.model.layers.17.attention.wk.biasB
+0MatMul_model.model.layers.23.attention.wk.weightM
+,model.model.layers.14.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.17.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.16.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.22.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.15.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.22.attention.wv.bias
+  " ( 0 8 M
+,model.model.layers.23.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.17.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.22.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.26.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.20.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.23.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.18.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.20.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.15.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.16.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.22.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.18.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 :
+model.model.norm_out.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.19.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.20.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.26.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.21.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.14.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.15.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.27.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.21.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.14.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.17.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.15.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.25.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.23.attention.wk.bias
+  " ( 0 8 D
+%model.model.layers.19.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.24.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.20.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.22.attention.wq.bias
+  " ( 0 8 =
+'model.model.layers.25.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.23.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.19.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.14.attention.wv.bias
+  " ( 0 8 J
+)model.model.layers.22.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.20.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.27.attention.wk.bias
+  " ( 0 8 M
+,model.model.layers.20.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.19.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.25.attention.wv.bias
+  " ( 0 8 J
+)model.model.layers.21.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.21.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
++model.model.layers.23.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.16.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.19.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.21.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.23.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.16.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.14.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.18.attention.wk.bias
+  " ( 0 8 =
+'model.model.layers.16.attention.wv.bias
+  " ( 0 8 J
+)model.model.layers.21.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.17.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.23.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.23.attention.wv.bias
+  " ( 0 8 =
+'model.model.layers.18.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.24.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.21.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 =
+'model.model.layers.14.attention.wq.bias
+  " ( 0 8 M
+,model.model.layers.17.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.24.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.19.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.27.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.27.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 5
+model.lm_head.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.26.attention.wq.bias
+  " ( 0 8 =
+'model.model.layers.24.attention.wq.bias
+  " ( 0 8 J
++model.model.layers.27.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.26.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.24.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.15.attention.wv.bias
+  " ( 0 8 M
+,model.model.layers.14.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.18.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
++model.model.layers.25.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.21.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.19.attention.wv.bias
+  " ( 0 8 D
+%model.model.layers.26.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.26.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.21.attention.wv.bias
+  " ( 0 8 =
+'model.model.layers.24.attention.wv.bias
+  " ( 0 8 M
+,model.model.layers.16.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.18.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.27.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.15.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.25.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.20.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.27.attention.wq.bias
+  " ( 0 8 M
+,model.model.layers.26.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.19.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
++model.model.layers.24.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.14.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.27.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.20.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 M
+,model.model.layers.27.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 =
+'model.model.layers.22.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.23.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.15.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
++model.model.layers.14.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.21.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.15.attention.wk.bias
+  " ( 0 8 M
+,model.model.layers.15.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.15.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.27.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.18.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.22.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.14.attention.wk.bias
+  " ( 0 8 =
+'model.model.layers.20.attention.wv.bias
+  " ( 0 8 J
+)model.model.layers.15.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.16.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.20.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.17.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
++model.model.layers.16.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.26.attention.wk.bias
+  " ( 0 8 M
+,model.model.layers.22.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.24.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.18.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.25.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.18.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.16.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.27.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.18.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.18.attention.wv.bias
+  " ( 0 8 =
+'model.model.layers.20.attention.wq.bias
+  " ( 0 8 =
+'model.model.layers.23.attention.wq.bias
+  " ( 0 8 D
+%model.model.layers.20.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.17.attention.wv.bias
+  " ( 0 8 M
+,model.model.layers.17.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 D
+%model.model.layers.16.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.17.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.19.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.19.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.24.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.16.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.25.attention.wk.bias
+  " ( 0 8 =
+'model.model.layers.21.attention.wk.bias
+  " ( 0 8 J
+)model.model.layers.18.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.25.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.27.attention.wv.bias
+  " ( 0 8 M
+,model.model.layers.25.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 =
+'model.model.layers.26.attention.wv.bias
+  " ( 0 8 J
+)model.model.layers.19.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.15.attention.wq.bias
+  " ( 0 8 J
+)model.model.layers.17.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.14.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.14.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.23.feed_forward.w3.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.25.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.17.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.24.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.22.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.26.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.21.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 M
+,model.model.layers.24.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 =
+'model.model.layers.19.attention.wk.bias
+  " ( 0 8 M
+,model.model.layers.26.feed_forward.w1.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.25.attention.wv.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
++model.model.layers.22.attention_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.24.attention.wk.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.26.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 J
+)model.model.layers.23.attention.wq.weight
+ ÿÿÿÿÿÿÿÿÿ " ( 0 8 D
+%model.model.layers.22.ffn_norm.weight
+ÿÿÿÿÿÿÿÿÿ " ( 0 8 =
+'model.model.layers.17.attention.wq.bias
+  " ( 0 8 M
+,model.model.layers.16.feed_forward.w2.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 J
+)model.model.layers.25.attention.wo.weight
+ÿÿÿÿÿÿÿÿÿ  " ( 0 8 
