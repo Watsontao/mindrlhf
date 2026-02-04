@@ -98,6 +98,9 @@ class FullyAsyncAgentLoopWorker(AgentLoopWorkerBase):
         Returns:
             list[AgentLoopOutput]: List of agent loop outputs, one per sample in the batch.
         """
+        priority = batch.meta_info.get('priority', 'HEAVY')
+        print(f"[Worker] 收到生成请求. Batch大小: {len(batch)}, 优先级: {priority}")
+
         config = self.config.actor_rollout_ref.rollout
         sampling_params = dict(
             temperature=config.temperature,
@@ -105,6 +108,15 @@ class FullyAsyncAgentLoopWorker(AgentLoopWorkerBase):
             repetition_penalty=1.0,
             logprobs=config.calculate_log_probs,
         )
+
+        # --- P-DSR: Fast Worker Guard ---
+        priority = batch.meta_info.get('priority', 'HEAVY')
+        if priority == 'FAST':
+            # 给 Fast 任务加上动态硬锁 (优先读 meta_info，兜底 1024)
+            dynamic_cap = batch.meta_info.get('max_tokens', 1024)
+            sampling_params['max_tokens'] = dynamic_cap
+            print(f"[Worker] ⚠️ 检测到 FAST 任务，已设置 max_tokens={dynamic_cap}") 
+        # -------------------------------
 
         # override sampling params for validation
         if batch.meta_info.get("validate", False):
@@ -128,6 +140,7 @@ class FullyAsyncAgentLoopWorker(AgentLoopWorkerBase):
             partial_output_list = [None] * len(batch)
         try:
             tasks = []
+            print(f"[Worker] 正在分发 {len(batch)} 个并发任务给 vLLM...")
             for i in range(len(batch)):
                 kwargs = {k: v[i] for k, v in batch.non_tensor_batch.items()}
                 kwargs["output"] = partial_output_list[i]
@@ -135,6 +148,7 @@ class FullyAsyncAgentLoopWorker(AgentLoopWorkerBase):
                     asyncio.create_task(self._partial_run_agent_loop(sampling_params, trajectory_info[i], **kwargs))
                 )
             outputs = await asyncio.gather(*tasks)
+            print(f"[Worker] ✅ vLLM 返回了 {len(outputs)} 个结果")
         except Exception:
             logger.exception("_partial_run_agent_loop failed")
             raise

@@ -57,10 +57,16 @@ class ValidateMetrics:
     param_version: Optional[int] = None
 
 
-def prepare_single_generation_data(batch_dict, config) -> DataProto:
+def prepare_single_generation_data(batch_dict, config, override_n=None) -> DataProto:
     """
     Similar to the logic of ray_trainer._prepare_generate_batch, but for a single sample.
     Separate the data used for generation from the original data.
+
+    Args:
+        batch_dict: The input batch dictionary
+        config: Configuration object
+        override_n (int, optional): If set, override the number of rollouts (n). 
+                                    Useful for Probe (n=1) vs Rest (n=N-1).
 
     Returns:
         tuple: (original_batch_dict, gen_data_for_single_sample)
@@ -87,7 +93,8 @@ def prepare_single_generation_data(batch_dict, config) -> DataProto:
         )
 
     # Add global step count to generated data
-    full_batch = full_batch.repeat(repeat_times=config.actor_rollout_ref.rollout.n, interleave=True)
+    repeat_times = override_n if override_n is not None else config.actor_rollout_ref.rollout.n
+    full_batch = full_batch.repeat(repeat_times=repeat_times, interleave=True)
     return full_batch
 
 

@@ -16,13 +16,16 @@ import asyncio
 import os
 import time
 import json
+import re
 from pprint import pformat
+from collections import defaultdict
 
 import numpy as np
 import ray
 import torch
 from ray import ObjectRef
 
+from verl import DataProto
 from recipe.fully_async_policy.detach_utils import (
     RolloutSample,
     ValidateMetrics,
@@ -158,8 +161,17 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
         self.total_long_matches_sum = 0.0 # Sum of ratios (count_long_rest / (n-1))
         self.long_tail_threshold = 512 # Define long-tail as > 512 tokens
 
+        # P-DSR State
+        self.sample_buffer = {}
+        
+        # P-DSR Aggregation (v3.0)
+        self.fake_batch_size = 128
+        self.batch_aggregator = defaultdict(list) # {batch_id: [probe_lengths]}
+
         # Initialize async queues
-        self.pending_queue = asyncio.Queue(maxsize=128)
+        # P-DSR: probe_queue for initial sampling, re_queue for Rest/Retry (high priority)
+        self.probe_queue = asyncio.Queue(maxsize=0)
+        self.re_queue = asyncio.Queue(maxsize=0)
         self.active_tasks = set()
         self.cancel_queue = asyncio.Queue()
 
@@ -190,7 +202,7 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
                 / (self.required_samples * self.config.async_training.trigger_parameter_sync_step)
             )
 
-            self.max_concurrent_samples = len(self.async_rollout_manager.server_handles) * 16
+            self.max_concurrent_samples = len(self.async_rollout_manager.server_handles) * 128
             self.max_concurrent_samples = min(self.max_concurrent_samples, self.max_required_samples)
             self.max_queue_size = self.max_required_samples
 
@@ -387,16 +399,25 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
     # Add samples to the pending_queue
     async def _feed_samples(self):
         continuous_iterator = self._create_continuous_iterator()
+        
+        sample_global_idx = 0
 
         for epoch, batch_dict in continuous_iterator:
-            # Similar to _prepare_generate_batch: Separate data
-            full_batch = prepare_single_generation_data(batch_dict, self.config)
+            # P-DSR: Generate PROBE first (N=1)
+            full_batch = prepare_single_generation_data(batch_dict, self.config, override_n=1)
 
             sample_id = f"sample_{epoch}_{self.global_steps}"
+            
+            # P-DSR: Fake Batch ID
+            fake_batch_id = sample_global_idx // self.fake_batch_size
+            sample_global_idx += 1
+            
+            # Cache the raw batch_dict for generating the rest (N-1) later
+            self.sample_buffer[sample_id] = batch_dict
 
             rollout_sample = RolloutSample(
                 full_batch=full_batch,
-                agent_loop_output_list=[None] * self.config.actor_rollout_ref.rollout.n,
+                agent_loop_output_list=[None] * 1, # Probe only needs 1 slot
                 sample_id=sample_id,
                 epoch=epoch,
                 param_version=0,
@@ -404,10 +425,10 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
                 param_version_end=[],
                 processing_times=[],
                 tool_calls=[],
-                rollout_status={},
+                rollout_status={'is_probe': True, 'fake_batch_id': fake_batch_id}, # Mark as Probe with Batch ID
             )
 
-            await self.pending_queue.put(rollout_sample)
+            await self.probe_queue.put(rollout_sample)
 
             # Check if have reached the last step
             if self.global_steps >= self.total_rollout_steps:
@@ -421,7 +442,7 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
             self.global_steps += 1
 
         # End signal
-        await self.pending_queue.put("DONE")
+        await self.probe_queue.put("DONE")
         print(f"[FullyAsyncRollouter][Feed] Sample addition is complete, {self.global_steps} samples have been added")
 
     async def _processor_worker(self):
@@ -429,15 +450,80 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
         Streaming worker coroutines, a sample is submitted for processing without waiting for batches
         """
         while True:
-            if self.paused or await self._should_pause_generation():
-                print(
-                    "[FullyAsyncRollouter][Processor] Received pause signal, waiting for remaining tasks to return..."
-                )
-                async with self.lock:
-                    self.paused = True
-                while self.active_tasks:
+            try:
+                # 1. Determine where to get the next sample
+                # ALWAYS prioritize existing tasks (cancel or rest/retry)
+                # These must be processed to avoid deadlocks
+                simple_from_cancel_queue = False
+                from_re_queue = False
+                rollout_sample = None
+
+                if not self.cancel_queue.empty():
+                    rollout_sample = await self.cancel_queue.get()
+                    simple_from_cancel_queue = True
+                    # --- P-DSR Fix: Sanitize Cancelled Samples ---
+                    if not isinstance(rollout_sample.agent_loop_output_list, list):
+                        rollout_sample.agent_loop_output_list = [None] * len(rollout_sample.full_batch)
+                    # ---------------------------------------------
+                elif not self.re_queue.empty():
+                    rollout_sample = await self.re_queue.get()
+                    from_re_queue = True
+                
+                # 2. If no existing tasks, check for pause before taking NEW probes
+                if rollout_sample is None:
+                    if self.paused or await self._should_pause_generation():
+                        if not self.paused:
+                            print("[FullyAsyncRollouter][Processor] 达到样本限制，暂停接收新 Probe...")
+                        async with self.lock:
+                            self.paused = True
+                            
+                        # Wait for existing active tasks to finish if we are paused
+                        while self.active_tasks:
+                            async with self.lock:
+                                if self.active_tasks:
+                                    done_tasks, self.active_tasks = await asyncio.wait(
+                                        self.active_tasks, return_when=asyncio.FIRST_COMPLETED
+                                    )
+                                for task in done_tasks:
+                                    await task
+
+                        async with self.lock:
+                            while self.paused:
+                                self.idle_start_time = time.time()
+                                # P-DSR Fix: Do not wait indefinitely. Wake up to check re_queue.
+                                try:
+                                    await asyncio.wait_for(self.condition.wait(), timeout=1.0)
+                                except asyncio.TimeoutError:
+                                    # Timeout means we should check if re_queue has items
+                                    pass
+                                
+                                # If re_queue has items, we must break the pause loop to process them
+                                if not self.re_queue.empty() or not self.cancel_queue.empty():
+                                    break
+                                    
+                        continue # Re-check queues after resume
+                    
+                    # Take NEW probe from queue
+                    rollout_sample = await self.probe_queue.get()
+                    if rollout_sample != "DONE":
+                        self.staleness_samples += 1
+
+                # 3. Handle Termination Signal
+                if rollout_sample == "DONE":
+                    print("[FullyAsyncRollouter][Processor] 收到结束信号，等待剩余任务完成...")
+                    while self.active_tasks:
+                        async with self.lock:
+                            if self.active_tasks:
+                                done_tasks, self.active_tasks = await asyncio.wait(
+                                    self.active_tasks, return_when=asyncio.FIRST_COMPLETED
+                                )
+                            for task in done_tasks:
+                                await task
+                    break
+
+                # 4. Concurrency Control (Flow Control)
+                while len(self.active_tasks) >= self.max_concurrent_samples:
                     async with self.lock:
-                        # After acquiring the lock, the number of active_tasks may change, need to be verified again
                         if self.active_tasks:
                             done_tasks, self.active_tasks = await asyncio.wait(
                                 self.active_tasks, return_when=asyncio.FIRST_COMPLETED
@@ -445,141 +531,209 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
                         for task in done_tasks:
                             await task
 
+                # 5. Submit sample processing
                 async with self.lock:
-                    while self.paused:
-                        self.idle_start_time = time.time()
+                    while self.paused and rollout_sample.rollout_status.get('is_probe'):
                         await self.condition.wait()
-                continue
+                        
+                    task = asyncio.create_task(
+                        self._process_single_sample_streaming(rollout_sample),
+                        name=rollout_sample.sample_id,
+                    )
+                    self.active_tasks.add(task)
 
-            simple_from_cancel_queue = False
-            if not self.cancel_queue.empty():
-                rollout_sample = await self.cancel_queue.get()
-                simple_from_cancel_queue = True
-            else:
-                rollout_sample = await self.pending_queue.get()
-                self.staleness_samples += 1
+                # 6. Cleanup
+                if simple_from_cancel_queue:
+                    self.cancel_queue.task_done()
+                elif from_re_queue:
+                    self.re_queue.task_done()
+                else:
+                    self.probe_queue.task_done()
 
-            if rollout_sample == "DONE":
-                print(
-                    "[FullyAsyncRollouter][Processor] Received end signal, waiting for remaining tasks to complete..."
-                )
-                while self.active_tasks:
-                    async with self.lock:
-                        if self.active_tasks:
-                            done_tasks, self.active_tasks = await asyncio.wait(
-                                self.active_tasks, return_when=asyncio.FIRST_COMPLETED
-                            )
-                        for task in done_tasks:
-                            await task
-                break
-
-            # Check whether the number of concurrent tasks exceeds the limit
-            while len(self.active_tasks) >= self.max_concurrent_samples:
-                async with self.lock:
-                    if self.active_tasks:
-                        done_tasks, self.active_tasks = await asyncio.wait(
-                            self.active_tasks, return_when=asyncio.FIRST_COMPLETED
-                        )
-                    for task in done_tasks:
-                        await task
-
-            # Submit single sample processing
-            async with self.lock:
-                # After the pause is over, the lock is acquired and it is necessary
-                # to determine whether it is the pause phase, otherwise continue to wait
-                while self.paused:
-                    await self.condition.wait()
-                task = asyncio.create_task(
-                    self._process_single_sample_streaming(rollout_sample),
-                    name=rollout_sample.sample_id,
-                )
-                self.active_tasks.add(task)
-
-            if simple_from_cancel_queue:
-                self.cancel_queue.task_done()
-            else:
-                self.pending_queue.task_done()
+            except Exception as e:
+                import traceback
+                print(f"[FullyAsyncRollouter] Processor loop crashed: {e}")
+                print(traceback.format_exc())
+                await asyncio.sleep(1)
 
     async def _process_single_sample_streaming(self, rollout_sample: RolloutSample):
         """Process a single sample streamingly"""
+        print(f"[P-DSR Debug] Start processing {rollout_sample.sample_id} (Priority: {rollout_sample.rollout_status.get('priority', 'Default')})")
+        
+        # Fix: If retrying from cancel_queue, agent_loop_output_list might be a DataProto. Reset it.
+        if not isinstance(rollout_sample.agent_loop_output_list, list):
+            rollout_sample.agent_loop_output_list = [None] * len(rollout_sample.full_batch)
+
         # Calling asynchronous generation methods
         rollout_sample.full_batch.non_tensor_batch["param_version"] = [self.current_param_version] * len(
             rollout_sample.full_batch
         )
+        
+        # --- P-DSR: Inject Priority into Meta Info ---
+        priority = rollout_sample.rollout_status.get('priority', 'HEAVY')
+        rollout_sample.full_batch.meta_info['priority'] = priority
+        # ---------------------------------------------
+
+        print(f"[Rollouter] 📤 发送任务 {rollout_sample.sample_id} -> Worker. 优先级: {priority}, 探路: {rollout_sample.rollout_status.get('is_probe', False)}")
+
         ret, is_cancel = await self.async_rollout_manager.generate_single_sample_async(
             rollout_sample.full_batch, rollout_sample.agent_loop_output_list
         )
+        
+        print(f"[Rollouter] 📥 任务 {rollout_sample.sample_id} 返回. 取消状态: {is_cancel}")
+        
+        # --- P-DSR Debug: Check Status ---
+        print(f"[P-DSR Debug] 任务 {rollout_sample.sample_id} 状态: {rollout_sample.rollout_status}")
+        # ---------------------------------
+
+        # --- P-DSR Debug: 检查是否发生取消 ---
+        if is_cancel:
+            print(f"[P-DSR Debug] ⚠️ 任务 {rollout_sample.sample_id} 被 vLLM 取消! ret类型={type(ret)}")
+        # ------------------------------------
+        
+        # --- P-DSR: Circuit Breaker & Retry (熔断重试) ---
+        if not is_cancel and priority == 'FAST':
+            # 检查是否撞墙 (Cap = 1024)
+            if 'response_mask' in ret.batch:
+                response_mask = ret.batch['response_mask']
+                if hasattr(response_mask, 'cpu'): response_mask = response_mask.cpu()
+                lengths = response_mask.sum(dim=-1)
+                
+                # 只要有一个样本被截断（达到或超过 1024），整个 Batch 重试
+                if (lengths >= 1024).any():
+                    print(f"[P-DSR] 🚨 样本 {rollout_sample.sample_id} 触发熔断！(长度 >= 1024) -> 正在重回 Heavy 队列...")
+                    
+                    # 1. 升级优先级
+                    rollout_sample.rollout_status['priority'] = 'HEAVY'
+                    
+                    # 2. 重新入队 (使用 re_queue)
+                    await self.re_queue.put(rollout_sample)
+                    
+                    # 3. 提前结束 (丢弃本次生成的残次品 ret)
+                    return 
+        # ------------------------------------------------
+        
         if not is_cancel:
-            rollout_sample.full_batch = ret
+            # --- P-DSR Logic: Reassembly (Rollouter-Side) ---
             
-            # --- Added: Log response lengths, rounded times, and long-tail probability ---
-            try:
+            # 1. Handle Probe Completion
+            is_probe = rollout_sample.rollout_status.get('is_probe', False)
+            if is_probe:
+                # Get Basic Info
                 if 'response_mask' in ret.batch:
                     response_mask = ret.batch['response_mask']
-                    if hasattr(response_mask, 'cpu'):
-                        response_mask = response_mask.cpu()
-                    lengths = response_mask.sum(dim=-1).tolist()
-                    
-                    # 1. Round processing times to 1 decimal place
-                    processing_times = ret.non_tensor_batch.get('processing_times', [0.0] * len(lengths))
-                    if isinstance(processing_times, np.ndarray):
-                        processing_times = processing_times.tolist()
-                    rounded_times = [round(t, 1) for t in processing_times]
+                    if hasattr(response_mask, 'cpu'): response_mask = response_mask.cpu()
+                    probe_len = response_mask.sum(dim=-1).item()
+                else:
+                    probe_len = 0 # Fallback
 
-                    # 2. Calculate Conditional Long-tail Probability
-                    # If 1st is long-tail (> threshold), what % of rest (n-1) are also long-tail?
-                    if len(lengths) > 1:
-                        is_first_long = lengths[0] > self.long_tail_threshold
-                        if is_first_long:
-                            self.total_long_probes += 1
-                            rest_lengths = lengths[1:]
-                            long_rest_count = sum(1 for l in rest_lengths if l > self.long_tail_threshold)
-                            match_ratio = long_rest_count / len(rest_lengths)
-                            self.total_long_matches_sum += match_ratio
-                            
-                            avg_prob = (self.total_long_matches_sum / self.total_long_probes) * 100
-                            print(f"[P-DSR Analysis] Sample: {rollout_sample.sample_id} | Probe is LONG. "
-                                  f"Conditional Prob (N-1 also long): {avg_prob:.2f}% (Total Long Probes: {self.total_long_probes})")
+                # P-DSR Aggregation
+                batch_id = rollout_sample.rollout_status.get('fake_batch_id', 0)
+                
+                # Cache the sample object (we need it later for dispatch) and the result
+                if rollout_sample.sample_id in self.sample_buffer:
+                    # Update buffer with Probe Result (for final reassembly)
+                    stored_data = self.sample_buffer[rollout_sample.sample_id]
+                    if isinstance(stored_data, dict) and 'input_ids' in stored_data: 
+                         self.sample_buffer[rollout_sample.sample_id] = {
+                             'input': stored_data,
+                             'probe_ret': ret
+                         }
+                    else:
+                         # Robustness check
+                         self.sample_buffer[rollout_sample.sample_id]['probe_ret'] = ret
 
-                    log_entry = {
-                        "timestamp": time.time(),
-                        "param_version": self.current_param_version,
-                        "sample_id": rollout_sample.sample_id,
-                        "n_responses": len(lengths),
-                        "lengths": lengths,
-                        "times": rounded_times
-                    }
+                self.batch_aggregator[batch_id].append((rollout_sample.sample_id, probe_len))
+                
+                # Check if Batch is Full
+                if len(self.batch_aggregator[batch_id]) >= self.fake_batch_size:
+                    # --- TRIGGER BATCH DISPATCH ---
+                    batch_data = self.batch_aggregator.pop(batch_id)
                     
-                    with open("rollout_length_stats.jsonl", "a", encoding="utf-8") as f:
-                        f.write(json.dumps(log_entry) + "\n")
+                    # Sort by Length Descending
+                    batch_data.sort(key=lambda x: x[1], reverse=True)
+                    
+                    # Top 20% Cutoff
+                    n_total = len(batch_data)
+                    cut_idx = int(n_total * 0.20)
+                    if cut_idx == 0: cut_idx = 1
+                    
+                    heavy_samples = batch_data[:cut_idx]
+                    fast_samples = batch_data[cut_idx:]
+                    
+                    # Calculate Dynamic Cap (1.5x of the boundary)
+                    boundary_len = heavy_samples[-1][1]
+                    dynamic_cap = int(boundary_len * 1.5)
+                    
+                    print(f"[P-DSR] ⚖️ Batch {batch_id} 排序完成. Cutoff: {boundary_len}, Cap: {dynamic_cap}. Heavy: {len(heavy_samples)}, Fast: {len(fast_samples)}")
+
+                    # Dispatch Helper
+                    async def dispatch(sid, prio, cap=None):
+                        if sid not in self.sample_buffer: return
                         
-            except Exception as e:
-                print(f"[FullyAsyncRollouter] Failed to log stats: {e}")
+                        # Retrieve Input Data
+                        buf_data = self.sample_buffer[sid]
+                        input_batch = buf_data['input']
+                        
+                        # Generate Rest
+                        rest_n = self.config.actor_rollout_ref.rollout.n - 1
+                        if rest_n > 0:
+                            full_batch_rest = prepare_single_generation_data(input_batch, self.config, override_n=rest_n)
+                            
+                            # Inject Cap if needed
+                            if cap:
+                                full_batch_rest.meta_info['max_tokens'] = cap
+                            
+                            # Create Sample
+                            rest_sample = RolloutSample(
+                                full_batch=full_batch_rest,
+                                agent_loop_output_list=[None] * rest_n,
+                                sample_id=sid,
+                                epoch=0,
+                                param_version=self.current_param_version,
+                                param_version_start=[],
+                                param_version_end=[],
+                                processing_times=[],
+                                tool_calls=[],
+                                rollout_status={'priority': prio, 'is_rest': True}, 
+                            )
+                            await self.re_queue.put(rest_sample)
 
-            # --- Added: Log decoded response text to separate file ---
-            try:
-                # 'responses' key usually contains the generated response tokens
-                if 'responses' in ret.batch:
-                    resp_tokens = ret.batch['responses']
-                    if hasattr(resp_tokens, 'cpu'):
-                        resp_tokens = resp_tokens.cpu()
+                    # Dispatch Heavy (No Cap)
+                    for sid, _ in heavy_samples:
+                        await dispatch(sid, 'HEAVY')
+                        
+                    # Dispatch Fast (With Dynamic Cap)
+                    for sid, _ in fast_samples:
+                        await dispatch(sid, 'FAST', cap=dynamic_cap)
+
+                # IMPORTANT: Wait for batch to fill, do not continue individual processing
+                return 
+
+            # 2. Handle Rest Completion (Reassembly)
+            is_rest = rollout_sample.rollout_status.get('is_rest', False)
+            if is_rest:
+                if rollout_sample.sample_id in self.sample_buffer:
+                    stored_data = self.sample_buffer.pop(rollout_sample.sample_id)
+                    probe_ret = stored_data['probe_ret']
                     
-                    # Decode tokens to text
-                    decoded_responses = self.tokenizer.batch_decode(resp_tokens, skip_special_tokens=True)
+                    # Concatenate Probe (1) + Rest (N-1) -> Total (N)
+                    # DataProto.concat expects a list
+                    merged_batch = DataProto.concat([probe_ret, ret])
                     
-                    text_log_entry = {
-                        "sample_id": rollout_sample.sample_id,
-                        "responses": decoded_responses
-                    }
-                    
-                    with open("rollout_responses.jsonl", "a", encoding="utf-8") as f_text:
-                        f_text.write(json.dumps(text_log_entry, ensure_ascii=False) + "\n")
-            except Exception as e:
-                print(f"[FullyAsyncRollouter] Failed to log response text: {e}")
-            # ---------------------------------------------------------
-            # -----------------------------------------------------------------------------
-            # -----------------------------------------------------------
-            # -------------------------------------------------
+                    # Update the sample with the merged batch
+                    rollout_sample.full_batch = merged_batch
+                    # Update status
+                    rollout_sample.rollout_status['is_merged'] = True
+                    print(f"[P-DSR] 📦 样本 {rollout_sample.sample_id} 拼接完成 (8 seqs). 准备发送给 Trainer.")
+                else:
+                    print(f"[P-DSR] ❌ Error: Buffer missing for Rest sample {rollout_sample.sample_id}")
+                    return
+
+            # ------------------------------------------------------------------
+            # [日志统计] 抽离出的独立方法
+            # ------------------------------------------------------------------
+            await self._log_rollout_metrics(rollout_sample, priority)
 
             rollout_sample.full_batch.non_tensor_batch["uid"] = np.array(
                 [f"uid_{rollout_sample.sample_id}"] * len(rollout_sample.full_batch), dtype=object
@@ -601,6 +755,74 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
             await self.cancel_queue.put(rollout_sample)
 
         self.processed_sample_count += 1
+
+    async def _log_rollout_metrics(self, rollout_sample, priority):
+        """Helper method to log length statistics and decoded responses."""
+        try:
+            # Use the merged full_batch to get all 8 responses
+            if 'response_mask' in rollout_sample.full_batch.batch:
+                response_mask = rollout_sample.full_batch.batch['response_mask']
+                if hasattr(response_mask, 'cpu'):
+                    response_mask = response_mask.cpu()
+                lengths = response_mask.sum(dim=-1).tolist()
+                
+                # 1. Processing times (Note: full_batch might not have processing_times merged perfectly, 
+                # but we try to get what we can or pad 0s)
+                # For simplicity, we just log 0s if missing, as merging times is complex
+                rounded_times = [0.0] * len(lengths)
+
+                # 2. Calculate Conditional Long-tail Probability
+                if len(lengths) > 1:
+                    is_first_long = lengths[0] > self.long_tail_threshold
+                    if is_first_long:
+                        self.total_long_probes += 1
+                        rest_lengths = lengths[1:]
+                        long_rest_count = sum(1 for l in rest_lengths if l > self.long_tail_threshold)
+                        match_ratio = long_rest_count / len(rest_lengths)
+                        self.total_long_matches_sum += match_ratio
+                        
+                        avg_prob = (self.total_long_matches_sum / self.total_long_probes) * 100
+                        print(f"[P-DSR Analysis] Sample: {rollout_sample.sample_id} | Probe is LONG. "
+                              f"Conditional Prob (N-1 also long): {avg_prob:.2f}% (Total Long Probes: {self.total_long_probes})")
+
+                # 3. Decode Text
+                try:
+                    responses_tensor = rollout_sample.full_batch.batch['responses']
+                    if hasattr(responses_tensor, 'cpu'): responses_tensor = responses_tensor.cpu()
+                    decoded_texts = self.tokenizer.batch_decode(responses_tensor, skip_special_tokens=True)
+                except:
+                    decoded_texts = ["<Decode Error>"] * len(lengths)
+
+                # 4. Dynamic Filename
+                import re
+                model_path = self.config.actor_rollout_ref.model.path
+                model_match = re.search(r'(\d+(?:\.\d+)?b)', model_path.lower())
+                model_suffix = model_match.group(1) if model_match else "model"
+                filename = f"rollout_length_stats_async_{model_suffix}.jsonl"
+                filename_text = f"rollout_responses_async_{model_suffix}.jsonl"
+
+                log_entry = {
+                    "timestamp": time.time(),
+                    "param_version": self.current_param_version,
+                    "sample_id": rollout_sample.sample_id,
+                    "n_responses": len(lengths),
+                    "lengths": lengths,
+                    "times": rounded_times,
+                    "priority": priority
+                }
+                
+                with open(filename, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(log_entry, ensure_ascii=False) + "\n")
+                    
+                log_entry_text = {
+                    "sample_id": rollout_sample.sample_id,
+                    "responses": decoded_texts
+                }
+                with open(filename_text, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(log_entry_text, ensure_ascii=False) + "\n")
+                    
+        except Exception as e:
+            print(f"[FullyAsyncRollouter] Failed to log stats: {e}")
 
     async def _streaming_generation_main(self):
         """The main entry method for stream processing"""
@@ -771,13 +993,18 @@ class FullyAsyncRollouter(FullyAsyncRayPPOTrainer):
 
     async def get_statistics(self) -> dict:
         queue_stats = self.message_queue_client.get_statistics_sync()
+        
+        # P-DSR Debug: Aggregator State
+        agg_stats = {k: len(v) for k, v in self.batch_aggregator.items()}
 
         stats = {
             # monitor stats
             "monitor/active_tasks_size": len(self.active_tasks),
-            "monitor/queue/pending_queue_size": self.pending_queue.qsize(),
+            "monitor/queue/pending_queue_size": self.probe_queue.qsize(), # Use probe_queue for stats
+            "monitor/queue/re_queue_size": self.re_queue.qsize(), # Add re_queue stats
             "monitor/queue/cancel_queue_size": self.cancel_queue.qsize(),
             "monitor/queue/mq_queue_size": queue_stats["queue_size"],
+            "monitor/aggregator_state": str(agg_stats), # Log aggregator state
             # counting stats
             "count/current_param_version": self.current_param_version,
             "count/total_generated_samples": self.total_generated_samples,
